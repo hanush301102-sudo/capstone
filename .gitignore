@@ -1,0 +1,22 @@
+# Compiled
+target/
+build/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node (diagram rendering)
+node_modules/
