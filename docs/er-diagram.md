@@ -1,0 +1,144 @@
+# ER Diagram
+
+![ER Diagram](diagrams/er-diagram.png)
+
+```mermaid
+erDiagram
+    USER ||--o{ USER_ROLE : has
+    ROLE ||--o{ USER_ROLE : assigned_to
+    USER ||--o| CLIENT_PROFILE : owns
+    USER ||--o| CREATOR_PROFILE : owns
+    CREATOR_PROFILE ||--o{ CREATOR_SKILL : has
+    SKILL ||--o{ CREATOR_SKILL : linked_to
+    CREATOR_PROFILE ||--o{ PORTFOLIO : showcases
+    CLIENT_PROFILE ||--o{ JOB : posts
+    JOB ||--o{ JOB_SKILL : requires
+    SKILL ||--o{ JOB_SKILL : linked_to
+    JOB ||--o{ APPLICATION : receives
+    CREATOR_PROFILE ||--o{ APPLICATION : submits
+    JOB ||--o| PROJECT : creates
+    APPLICATION ||--o| PROJECT : results_in
+    USER ||--o{ NOTIFICATION : receives
+    USER ||--o{ REPORT : reports_as
+    USER ||--o{ REPORT : reported_as
+    JOB ||--o{ REPORT : subject_of
+
+    USER {
+        bigint id PK
+        string email UK "unique"
+        string password "hashed"
+        string firstName
+        string lastName
+        enum status "ACTIVE / SUSPENDED / DEACTIVATED"
+        datetime createdAt
+    }
+
+    ROLE {
+        bigint id PK
+        string name UK "CLIENT / CREATOR / ADMIN"
+    }
+
+    USER_ROLE {
+        bigint user_id PK,FK
+        bigint role_id PK,FK
+    }
+
+    CLIENT_PROFILE {
+        bigint id PK
+        bigint user_id FK
+        string companyName
+        string bio
+        string industry
+        datetime createdAt
+    }
+
+    CREATOR_PROFILE {
+        bigint id PK
+        bigint user_id FK
+        string headline
+        string bio
+        int experienceYears
+        enum availability "AVAILABLE / PARTIAL / UNAVAILABLE"
+        decimal hourlyRate
+        datetime createdAt
+    }
+
+    SKILL {
+        bigint id PK
+        string name UK
+        string category "EDITING / DESIGN / SCRIPTWRITING"
+    }
+
+    CREATOR_SKILL {
+        bigint id PK
+        bigint creator_profile_id FK
+        bigint skill_id FK
+        enum level "BEGINNER / INTERMEDIATE / EXPERT"
+    }
+
+    PORTFOLIO {
+        bigint id PK
+        bigint creator_profile_id FK
+        string title
+        string description
+        string mediaUrl
+        datetime createdAt
+    }
+
+    JOB {
+        bigint id PK
+        bigint client_profile_id FK
+        string title
+        string description
+        decimal budgetMin
+        decimal budgetMax
+        date deadline
+        enum status "OPEN / IN_PROGRESS / CLOSED"
+        datetime createdAt
+    }
+
+    JOB_SKILL {
+        bigint id PK
+        bigint job_id FK
+        bigint skill_id FK
+    }
+
+    APPLICATION {
+        bigint id PK
+        bigint job_id FK
+        bigint creator_profile_id FK
+        string coverLetter
+        enum status "PENDING / SHORTLISTED / ACCEPTED / REJECTED"
+        datetime appliedAt
+    }
+
+    PROJECT {
+        bigint id PK
+        bigint job_id FK
+        bigint application_id FK
+        string title
+        enum status "NOT_STARTED / IN_PROGRESS / COMPLETED / CANCELLED"
+        date startDate
+        date endDate
+    }
+
+    NOTIFICATION {
+        bigint id PK
+        bigint user_id FK
+        string message
+        string type
+        boolean isRead
+        datetime createdAt
+    }
+
+    REPORT {
+        bigint id PK
+        bigint reporter_id FK
+        bigint reported_user_id FK
+        bigint job_id FK
+        string reason
+        string description
+        enum status "PENDING / REVIEWED / DISMISSED"
+        datetime createdAt
+    }
+```
