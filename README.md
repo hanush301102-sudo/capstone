@@ -14,11 +14,11 @@ CreatorHire is a structured marketplace that connects clients (creators, startup
 
 | Document | Description |
 |----------|-------------|
-| [Problem Statement](docs/problem-statement.md) | Domain, users, problem, proposed solution, success criteria |
+| [Problem Statement](problem-statement.md) | Domain, users, problem, proposed solution, success criteria |
 | [MVP Scope](docs/mvp.md) | Minimum viable product features and core workflows |
-| [ER Diagram](docs/er-diagram.md) | Entity relationship model of the core database schema |
-| [System Architecture](docs/system-architecture.md) | Layered architecture and deployment overview |
-| [Class Diagram](docs/class-diagram.md) | Core application class structure |
+| [ER Diagram](er-diagram.md) | Entity relationship model of the core database schema |
+| [Class Diagram](class-diagram.md) | Core application class structure |
+| [System Architecture](system-architecture.md) | Layered architecture and deployment overview |
 
 ## Roles
 

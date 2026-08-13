@@ -1,6 +1,6 @@
 # Class Diagram
 
-![Class Diagram](diagrams/class-diagram.png)
+![Class Diagram](docs/diagrams/class-diagram.png)
 
 ```mermaid
 classDiagram

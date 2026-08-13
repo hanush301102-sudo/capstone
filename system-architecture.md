@@ -1,6 +1,6 @@
 # System Architecture
 
-![System Architecture](diagrams/system-architecture.png)
+![System Architecture](docs/diagrams/system-architecture.png)
 
 ```mermaid
 flowchart TB

@@ -1,6 +1,6 @@
 # ER Diagram
 
-![ER Diagram](diagrams/er-diagram.png)
+![ER Diagram](docs/diagrams/er-diagram.png)
 
 ```mermaid
 erDiagram
