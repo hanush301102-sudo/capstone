@@ -1,0 +1,154 @@
+﻿classDiagram
+    direction LR
+
+    class User {
+        -Long id
+        -String email
+        -String password
+        -String firstName
+        -String lastName
+        -UserStatus status
+        +getAuthorities()
+    }
+
+    class Role {
+        -Long id
+        -String name
+    }
+
+    class ClientProfile {
+        -Long id
+        -String companyName
+        -String bio
+        -String industry
+    }
+
+    class CreatorProfile {
+        -Long id
+        -String headline
+        -String bio
+        -int experienceYears
+        -Availability availability
+        -BigDecimal hourlyRate
+    }
+
+    class Skill {
+        -Long id
+        -String name
+        -String category
+    }
+
+    class CreatorSkill {
+        -Long id
+        -SkillLevel level
+    }
+
+    class Portfolio {
+        -Long id
+        -String title
+        -String description
+        -String mediaUrl
+    }
+
+    class Job {
+        -Long id
+        -String title
+        -String description
+        -BigDecimal budgetMin
+        -BigDecimal budgetMax
+        -LocalDate deadline
+        -JobStatus status
+    }
+
+    class JobSkill {
+        -Long id
+    }
+
+    class Application {
+        -Long id
+        -String coverLetter
+        -ApplicationStatus status
+    }
+
+    class Project {
+        -Long id
+        -String title
+        -ProjectStatus status
+        -LocalDate startDate
+        -LocalDate endDate
+    }
+
+    class Notification {
+        -Long id
+        -String message
+        -String type
+        -boolean isRead
+        -LocalDateTime createdAt
+    }
+
+    class Report {
+        -Long id
+        -String reason
+        -String description
+        -ReportStatus status
+    }
+
+    class AuthController
+    class JobController
+    class ApplicationController
+    class ProjectController
+    class AdminController
+
+    class AuthService
+    class UserService
+    class JobService
+    class ApplicationService
+    class ProjectService
+    class NotificationService
+    class ReportService
+
+    class UserRepository
+    class JobRepository
+    class ApplicationRepository
+    class ProjectRepository
+    class SkillRepository
+    class NotificationRepository
+    class ReportRepository
+
+    class JwtFilter
+    class JwtService
+    class SecurityConfig
+
+    User "1" --> "1" ClientProfile : has
+    User "1" --> "1" CreatorProfile : has
+    User "1" --> "*" Role : has many
+    CreatorProfile "1" --> "*" CreatorSkill : has
+    CreatorSkill "*" --> "1" Skill : references
+    CreatorProfile "1" --> "*" Portfolio : showcases
+    ClientProfile "1" --> "*" Job : posts
+    Job "*" --> "*" Skill : requires (via JobSkill)
+    Job "1" --> "*" Application : receives
+    CreatorProfile "1" --> "*" Application : submits
+    Job "1" --> "1" Project : creates
+    Application "1" --> "1" Project : results in
+    User "1" --> "*" Notification : receives
+    User "1" --> "*" Report : files
+    Report "*" --> "1" Job : targets
+    Report "*" --> "1" User : reports
+
+    AuthController --> AuthService
+    JobController --> JobService
+    ApplicationController --> ApplicationService
+    ProjectController --> ProjectService
+    AdminController --> ReportService
+    AdminController --> UserService
+
+    AuthService --> UserRepository
+    JobService --> JobRepository
+    ApplicationService --> ApplicationRepository
+    ProjectService --> ProjectRepository
+    NotificationService --> NotificationRepository
+    ReportService --> ReportRepository
+
+    JwtFilter --> JwtService
+    SecurityConfig --> JwtFilter

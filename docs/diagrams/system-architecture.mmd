@@ -1,0 +1,29 @@
+﻿flowchart TB
+    subgraph FRONTEND["Frontend (Web Client)"]
+        BROWSER["React Browser App"]
+    end
+
+    subgraph BACKEND["Spring Boot Application"]
+        SEC["Security Layer\n- JWT Filter\n- Authentication Manager\n- Role-based Authorization"]
+        CTRL["Controller Layer\n- REST Controllers (Auth, User, Job,\nApplication, Project, Admin)"]
+        SVC["Service Layer\n- Business Logic\n- Validation\n- Notifications"]
+        REPO["Repository Layer\n- Spring Data JPA Repositories"]
+        XCUT["Cross-cutting\n- Exception Handler\n- Audit Logging"]
+    end
+
+    DB[("MySQL Database\n- 13 tables\n- JPA-managed schema")]
+
+    BROWSER -->|"HTTPS JSON / REST + JWT"| SEC
+    SEC --> CTRL
+    CTRL --> SVC
+    SVC --> REPO
+    REPO --> DB
+    XCUT -.->|"audit + error handling"| CTRL
+    SVC -.->|"audit records"| XCUT
+
+    subgraph CLOUD["Cloud Deployment"]
+        CONTAINER["Docker Container"]
+        LB["Load Balancer"]
+    end
+    BROWSER --> LB
+    LB --> CONTAINER
