@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { NotificationBell } from './Notifications';
 
 export function Navbar() {
   const { user, logout, hasRole } = useAuth();
@@ -18,6 +19,7 @@ export function Navbar() {
               {hasRole('CREATOR') && <Link to="/creator" className="hover:text-brand-600">Dashboard</Link>}
               {hasRole('ADMIN') && <Link to="/admin" className="hover:text-brand-600">Admin</Link>}
               <Link to="/discover" className="hover:text-brand-600">Discover</Link>
+              <NotificationBell />
               <span className="text-ink-400">{user.email}</span>
               <button
                 onClick={() => {

@@ -16,6 +16,9 @@ import { PortfolioManager } from './pages/creator/PortfolioManager';
 import { ProfileEdit } from './pages/creator/ProfileEdit';
 import { PublicProfile } from './pages/creator/PublicProfile';
 import { JobDetailPage } from './pages/jobs/JobDetailPage';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { ReportPage } from './pages/ReportPage';
+import { NotificationsPage } from './components/Notifications';
 
 export function App() {
   return (
@@ -43,8 +46,10 @@ export function App() {
               <Route path="creator/:id" element={<PublicProfile />} />
               <Route path="jobs/:id" element={<JobDetailPage />} />
               <Route element={<RequireRole role="ADMIN" />}>
-                <Route path="admin/*" element={<Placeholder title="Admin screens ship in TASK-025" />} />
+                <Route path="admin" element={<AdminDashboard />} />
               </Route>
+              <Route path="report" element={<ReportPage />} />
+              <Route path="notifications" element={<NotificationsPage />} />
             </Route>
             <Route path="*" element={<Placeholder title="Page not found" />} />
           </Route>
