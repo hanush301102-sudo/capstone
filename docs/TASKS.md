@@ -25,7 +25,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 | TASK-014 | Application + MatchScoringService + samples | TASK-013 | DONE |
 | TASK-015 | Project + ReliabilityService | TASK-014 | DONE |
 | TASK-016 | Portfolio + verification + notifications + reports + admin | TASK-012 | DONE |
-| TASK-017 | Backend tests (auth, job→apply→hire flow, scoring) | TASK-016 | TODO |
+| TASK-017 | Backend tests (auth, job→apply→hire flow, scoring) | TASK-016 | DONE |
 
 ## Phase C — Frontend (React + Vite + TS)
 
