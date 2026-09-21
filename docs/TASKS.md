@@ -22,7 +22,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 | TASK-011 | Entities + repositories (15 tables) | TASK-010 | DONE |
 | TASK-012 | Auth (JWT, roles, register/login) | TASK-011 | DONE |
 | TASK-013 | Job + brief + Creator Radar | TASK-012 | DONE |
-| TASK-014 | Application + MatchScoringService + samples | TASK-013 | TODO |
+| TASK-014 | Application + MatchScoringService + samples | TASK-013 | DONE |
 | TASK-015 | Project + ReliabilityService | TASK-014 | TODO |
 | TASK-016 | Portfolio + verification + notifications + reports + admin | TASK-012 | TODO |
 | TASK-017 | Backend tests (auth, job→apply→hire flow, scoring) | TASK-016 | TODO |
