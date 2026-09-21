@@ -2,13 +2,24 @@
 
 **Creator Marketplace for Hiring Video Editors, Designers, and Scriptwriters**
 
-CreatorHire is a structured marketplace that connects clients (creators, startups, agencies, and small businesses) with creative professionals (video editors, designers, scriptwriters) and manages the workflow from job posting and application to candidate selection and project creation.
+> Stop fishing through generic applications. Hire creators whose style, skills, and reliability are proven.
+
+CreatorHire is a style-first, verified, match-scored marketplace that connects clients (creators, startups, agencies, and small businesses) with creative professionals (video editors, designers, scriptwriters) and manages the workflow from brief-based job posting and match-scored applications to comparison-based shortlisting and project creation.
+
+## Differentiators
+
+1. **Creative Briefs** — every job requires style keywords + reference links; applications answer the brief.
+2. **Match Score** — transparent rule-based scoring ranks every application.
+3. **Verified Portfolio + Comparison** — skill-tagged portfolio with verification; side-by-side shortlist comparison.
+4. **Reliability Record** — on-time delivery rate + response time from completed projects.
+5. **Creator Radar** — discover creators by skill + availability before posting.
 
 ## Tech Stack
 
-- **Track**: Java — Spring Boot
-- **Authentication**: JWT-based authentication with role-based authorization
-- **Database**: MySQL (via Spring Data JPA)
+- **Backend**: Java 21 — Spring Boot (Spring Security + JWT, Spring Data JPA)
+- **Frontend**: React + Vite + TypeScript (parallax landing, card-based discovery)
+- **Database**: MySQL via Spring Data JPA (H2 for local development)
+- **Deployment**: Railway (Docker)
 
 ## Documentation
 
