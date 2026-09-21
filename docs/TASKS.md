@@ -12,13 +12,13 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 | TASK-004 | Rework ER diagram (15 tables) + PNG | TASK-003 | DONE |
 | TASK-005 | Rework class diagram (Matching/Reliability/Radar) + PNG | TASK-003 | DONE |
 | TASK-006 | Rework system architecture + PNG | TASK-003 | DONE |
-| TASK-007 | TASKS.md + AGENTS.md baseline | TASK-001 | DOING |
+| TASK-007 | TASKS.md + AGENTS.md baseline | TASK-001 | DONE |
 
 ## Phase B — Backend (Spring Boot, Java 21)
 
 | ID | Title | Dependencies | Status |
 |----|-------|--------------|--------|
-| TASK-010 | Project scaffold (Initializr, profiles H2/MySQL, OpenAPI) | TASK-007 | TODO |
+| TASK-010 | Project scaffold (Initializr, profiles H2/MySQL, OpenAPI) | TASK-007 | DONE |
 | TASK-011 | Entities + repositories (15 tables) | TASK-010 | TODO |
 | TASK-012 | Auth (JWT, roles, register/login) | TASK-011 | TODO |
 | TASK-013 | Job + brief + Creator Radar | TASK-012 | TODO |
