@@ -6,6 +6,7 @@ import { RequireAuth, RequireRole } from './components/ProtectedRoute';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { Discover } from './pages/Discover';
 
 export function App() {
   return (
@@ -16,8 +17,8 @@ export function App() {
             <Route index element={<Landing />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
-            <Route path="discover" element={<Placeholder title="Discovery ships in TASK-022" />} />
             <Route element={<RequireAuth />}>
+              <Route path="discover" element={<Discover />} />
               <Route element={<RequireRole role="CLIENT" />}>
                 <Route path="client/*" element={<Placeholder title="Client dashboard ships in TASK-023" />} />
               </Route>
