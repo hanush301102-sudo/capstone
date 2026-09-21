@@ -7,6 +7,10 @@ import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Discover } from './pages/Discover';
+import { ClientDashboard } from './pages/client/ClientDashboard';
+import { ClientProjects } from './pages/client/ClientProjects';
+import { JobDetail } from './pages/client/JobDetail';
+import { JobForm } from './pages/client/JobForm';
 
 export function App() {
   return (
@@ -20,7 +24,11 @@ export function App() {
             <Route element={<RequireAuth />}>
               <Route path="discover" element={<Discover />} />
               <Route element={<RequireRole role="CLIENT" />}>
-                <Route path="client/*" element={<Placeholder title="Client dashboard ships in TASK-023" />} />
+                <Route path="client" element={<ClientDashboard />} />
+                <Route path="client/jobs/new" element={<JobForm />} />
+                <Route path="client/jobs/:id" element={<JobDetail />} />
+                <Route path="client/jobs/:id/edit" element={<JobForm />} />
+                <Route path="client/projects" element={<ClientProjects />} />
               </Route>
               <Route element={<RequireRole role="CREATOR" />}>
                 <Route path="creator/*" element={<Placeholder title="Creator dashboard ships in TASK-024" />} />
