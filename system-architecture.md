@@ -4,32 +4,52 @@
 
 ```mermaid
 flowchart TB
-    subgraph FRONTEND["Frontend (Web Client)"]
-        BROWSER["React Browser App"]
+    subgraph FRONTEND["Frontend — React + Vite + TypeScript"]
+        LANDING["Marketing Landing\n- Parallax scroll hero\n- Categories + CTAs"]
+        MARKET["Discovery (Card UI)\n- Creator Radar cards\n- Job cards + filters"]
+        COMPARE["Comparison View\n- Side-by-side shortlist"]
+        DASH["Dashboards\n- Client / Creator / Admin"]
     end
 
-    subgraph BACKEND["Spring Boot Application"]
+    subgraph BACKEND["Spring Boot Application (Java 21)"]
         SEC["Security Layer\n- JWT Filter\n- Authentication Manager\n- Role-based Authorization"]
-        CTRL["Controller Layer\n- REST Controllers (Auth, User, Job,\nApplication, Project, Admin)"]
-        SVC["Service Layer\n- Business Logic\n- Validation\n- Notifications"]
+        CTRL["Controller Layer\n- Auth, User, Job, CreatorDiscovery,\nApplication, Project, Portfolio, Admin"]
+        SVC["Service Layer\n- Business Logic + Validation"]
+        MATCH["Matching Engine\n- MatchScoringService\n- Skill / budget / availability /\ndeadline / reliability score"]
+        REL["Reliability Module\n- ReliabilityService\n- On-time rate + response time"]
+        RADAR["Creator Radar\n- CreatorDiscoveryService\n- Skill + availability search"]
         REPO["Repository Layer\n- Spring Data JPA Repositories"]
         XCUT["Cross-cutting\n- Exception Handler\n- Audit Logging"]
     end
 
-    DB[("MySQL Database\n- 13 tables\n- JPA-managed schema")]
+    DB[("MySQL Database\n- 15 tables\n- JPA-managed schema")]
 
-    BROWSER -->|"HTTPS JSON / REST + JWT"| SEC
+    LANDING --> MARKET
+    MARKET --> COMPARE
+    MARKET -->|"HTTPS JSON / REST + JWT"| SEC
+    COMPARE -->|"HTTPS JSON / REST + JWT"| SEC
+    DASH -->|"HTTPS JSON / REST + JWT"| SEC
     SEC --> CTRL
     CTRL --> SVC
+    SVC --> MATCH
+    SVC --> REL
+    SVC --> RADAR
+    MATCH --> REPO
+    REL --> REPO
+    RADAR --> REPO
     SVC --> REPO
     REPO --> DB
     XCUT -.->|"audit + error handling"| CTRL
     SVC -.->|"audit records"| XCUT
 
-    subgraph CLOUD["Cloud Deployment"]
-        CONTAINER["Docker Container"]
-        LB["Load Balancer"]
+    subgraph CLOUD["Cloud Deployment (Railway)"]
+        FE["Frontend Service\n- Static build"]
+        BE["Backend Service\n- Docker container"]
+        MYSQL[("Managed MySQL")]
+        LB["Public URL / Router"]
     end
-    BROWSER --> LB
-    LB --> CONTAINER
+    LANDING -.->|"served by"| FE
+    BE --> MYSQL
+    LB --> FE
+    LB --> BE
 ```

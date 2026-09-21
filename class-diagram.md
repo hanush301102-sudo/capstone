@@ -35,6 +35,9 @@ classDiagram
         -int experienceYears
         -Availability availability
         -BigDecimal hourlyRate
+        -BigDecimal onTimeDeliveryRate
+        -int avgResponseTimeHours
+        -int completedProjects
     }
 
     class Skill {
@@ -53,12 +56,23 @@ classDiagram
         -String title
         -String description
         -String mediaUrl
+        -String workType
+        -VerificationStatus verificationStatus
+        -String collaborationRole
+        -String outcomeStats
+    }
+
+    class PortfolioSkill {
+        -Long id
     }
 
     class Job {
         -Long id
         -String title
         -String description
+        -String creativeBrief
+        -String styleKeywords
+        -String referenceLinks
         -BigDecimal budgetMin
         -BigDecimal budgetMax
         -LocalDate deadline
@@ -72,7 +86,16 @@ classDiagram
     class Application {
         -Long id
         -String coverLetter
+        -String briefResponse
+        -BigDecimal proposedRate
+        -int estimatedDays
+        -BigDecimal matchScore
+        -int responseTimeHours
         -ApplicationStatus status
+    }
+
+    class ApplicationSample {
+        -Long id
     }
 
     class Project {
@@ -81,6 +104,8 @@ classDiagram
         -ProjectStatus status
         -LocalDate startDate
         -LocalDate endDate
+        -LocalDate deadline
+        -LocalDate completedOn
     }
 
     class Notification {
@@ -100,23 +125,33 @@ classDiagram
 
     class AuthController
     class JobController
+    class CreatorDiscoveryController
     class ApplicationController
     class ProjectController
+    class PortfolioController
     class AdminController
 
     class AuthService
     class UserService
     class JobService
+    class CreatorDiscoveryService
+    class MatchScoringService
     class ApplicationService
     class ProjectService
+    class ReliabilityService
+    class PortfolioService
     class NotificationService
     class ReportService
 
     class UserRepository
     class JobRepository
+    class CreatorProfileRepository
     class ApplicationRepository
+    class ApplicationSampleRepository
     class ProjectRepository
     class SkillRepository
+    class PortfolioRepository
+    class PortfolioSkillRepository
     class NotificationRepository
     class ReportRepository
 
@@ -130,10 +165,12 @@ classDiagram
     CreatorProfile "1" --> "*" CreatorSkill : has
     CreatorSkill "*" --> "1" Skill : references
     CreatorProfile "1" --> "*" Portfolio : showcases
+    Portfolio "*" --> "*" Skill : tagged (via PortfolioSkill)
     ClientProfile "1" --> "*" Job : posts
     Job "*" --> "*" Skill : requires (via JobSkill)
     Job "1" --> "*" Application : receives
     CreatorProfile "1" --> "*" Application : submits
+    Application "1" --> "*" Portfolio : samples (via ApplicationSample)
     Job "1" --> "1" Project : creates
     Application "1" --> "1" Project : results in
     User "1" --> "*" Notification : receives
@@ -143,15 +180,26 @@ classDiagram
 
     AuthController --> AuthService
     JobController --> JobService
+    CreatorDiscoveryController --> CreatorDiscoveryService
     ApplicationController --> ApplicationService
+    ApplicationController --> MatchScoringService
     ProjectController --> ProjectService
+    ProjectController --> ReliabilityService
+    PortfolioController --> PortfolioService
     AdminController --> ReportService
     AdminController --> UserService
+    AdminController --> PortfolioService
 
     AuthService --> UserRepository
     JobService --> JobRepository
+    CreatorDiscoveryService --> CreatorProfileRepository
+    MatchScoringService --> ApplicationRepository
     ApplicationService --> ApplicationRepository
+    ApplicationService --> ApplicationSampleRepository
     ProjectService --> ProjectRepository
+    ReliabilityService --> CreatorProfileRepository
+    PortfolioService --> PortfolioRepository
+    PortfolioService --> PortfolioSkillRepository
     NotificationService --> NotificationRepository
     ReportService --> ReportRepository
 
