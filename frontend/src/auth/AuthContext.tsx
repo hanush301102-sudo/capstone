@@ -6,14 +6,14 @@ import type { AuthResponse, AuthUser } from '../api/types';
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthResponse>;
   register: (input: {
     email: string;
     password: string;
     firstName: string;
     lastName: string;
     role: string;
-  }) => Promise<void>;
+  }) => Promise<AuthResponse>;
   logout: () => void;
   hasRole: (role: string) => boolean;
 }
@@ -40,18 +40,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser({ email: data.email, firstName: '', lastName: '', roles: data.roles });
   }, []);
 
-  const login = useCallback(
-    async (email: string, password: string) => {
-      const res = await api.post<AuthResponse>('/auth/login', { email, password });
-      applyResponse(res.data);
-    },
-    [applyResponse],
-  );
+  const login = useCallback(async (email: string, password: string) => {
+    const res = await api.post<AuthResponse>('/auth/login', { email, password });
+    applyResponse(res.data);
+    return res.data;
+  }, [applyResponse]);
 
   const register = useCallback(
     async (input: { email: string; password: string; firstName: string; lastName: string; role: string }) => {
       const res = await api.post<AuthResponse>('/auth/register', input);
       applyResponse(res.data);
+      return res.data;
     },
     [applyResponse],
   );

@@ -3,6 +3,9 @@ import { AuthProvider } from './auth/AuthContext';
 import { Layout } from './components/Layout';
 import { Placeholder } from './components/Placeholder';
 import { RequireAuth, RequireRole } from './components/ProtectedRoute';
+import { Landing } from './pages/Landing';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
 
 export function App() {
   return (
@@ -10,9 +13,9 @@ export function App() {
       <AuthProvider>
         <Routes>
           <Route element={<Layout />}>
-            <Route index element={<Placeholder title="CreatorHire — landing ships in TASK-021" />} />
-            <Route path="login" element={<Placeholder title="Login ships in TASK-021" />} />
-            <Route path="register" element={<Placeholder title="Register ships in TASK-021" />} />
+            <Route index element={<Landing />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
             <Route path="discover" element={<Placeholder title="Discovery ships in TASK-022" />} />
             <Route element={<RequireAuth />}>
               <Route element={<RequireRole role="CLIENT" />}>
