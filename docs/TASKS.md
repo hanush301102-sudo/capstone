@@ -34,7 +34,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 | TASK-020 | Scaffold (router, auth context, API client, Tailwind) | TASK-007 | DONE |
 | TASK-021 | Landing (parallax) + auth screens | TASK-020 | DONE |
 | TASK-022 | Card-based discovery (Creator Radar + job cards, filters) | TASK-020 | DONE |
-| TASK-023 | Client dashboards (post job, ranked apps, comparison, projects) | TASK-022 | TODO |
+| TASK-023 | Client dashboards (post job, ranked apps, comparison, projects) | TASK-022 | DONE |
 | TASK-024 | Creator dashboards (profile, portfolio, apply, tracking) | TASK-022 | TODO |
 | TASK-025 | Admin screens + notifications | TASK-020 | TODO |
 
