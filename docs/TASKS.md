@@ -42,7 +42,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 
 | ID | Title | Dependencies | Status |
 |----|-------|--------------|--------|
-| TASK-030 | Dockerfiles + Railway (MySQL, backend, frontend) | TASK-017, TASK-025 | TODO |
+| TASK-030 | Dockerfiles + Railway (MySQL, backend, frontend) | TASK-017, TASK-025 | DONE |
 | TASK-031 | End-to-end verification on public URL | TASK-030 | TODO |
 
 ## Definition of Done (per task)

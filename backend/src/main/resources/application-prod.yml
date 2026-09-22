@@ -7,7 +7,9 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate
+      # update: creates the schema on first boot against an empty database
+      # (e.g. fresh Railway MySQL). Switch to validate once migrations exist.
+      ddl-auto: update
     show-sql: false
   h2:
     console:

@@ -36,3 +36,8 @@ CreatorHire is a style-first, verified, match-scored marketplace that connects c
 - **Client** — hires creative professionals for projects
 - **Creative Professional** — showcases skills/portfolio and applies for jobs
 - **Admin** — manages users, moderates content, reviews reports
+
+## Deployment
+
+- See [docs/DEPLOY.md](docs/DEPLOY.md) for Railway deployment (MySQL + backend + frontend).
+- Live URLs: `UNKNOWN` until TASK-031 cloud verification completes.
