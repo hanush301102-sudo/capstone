@@ -20,3 +20,6 @@ Thumbs.db
 
 # Node (diagram rendering)
 node_modules/
+
+# Local single-origin demo bundle (built, not committed)
+backend/src/main/resources/static/

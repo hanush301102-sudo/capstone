@@ -22,6 +22,18 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-24"
 
 Set `SPRING_PROFILES_ACTIVE=prod` and env vars `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `FRONTEND_URL`.
 
+## Single-origin local demo (one link for everything)
+
+```powershell
+cd ../frontend; npm run build
+New-Item -ItemType Directory -Force -Path ../backend/src/main/resources/static | Out-Null
+Copy-Item dist/* ../backend/src/main/resources/static/ -Recurse -Force
+cd ../backend
+# then run as in dev; open http://localhost:8080
+```
+
+The `static/` bundle is git-ignored build output; `SpaController` forwards frontend routes to it.
+
 ## Test
 
 ```powershell
