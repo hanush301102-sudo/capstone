@@ -1,14 +1,14 @@
-# Production profile (e.g. Railway MySQL). All values come from environment variables.
+# Production profile (e.g. Railway PostgreSQL). All values come from environment variables.
 spring:
   datasource:
     url: ${DB_URL}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       # update: creates the schema on first boot against an empty database
-      # (e.g. fresh Railway MySQL). Switch to validate once migrations exist.
+      # (e.g. fresh Railway PostgreSQL). Switch to validate once migrations exist.
       ddl-auto: update
     show-sql: false
   h2:

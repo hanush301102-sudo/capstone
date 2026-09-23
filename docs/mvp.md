@@ -94,6 +94,6 @@ The MVP's 5 differentiators against generic hiring applications:
 
 - **Backend**: Spring Boot (Java 21), Spring Security + JWT, Spring Data JPA
 - **Matching**: rule-based `MatchScoringService` (transparent, weighted score — no ML)
-- **Database**: MySQL with the entity model defined in the [ER Diagram](../er-diagram.md)
+- **Database**: PostgreSQL with the entity model defined in the [ER Diagram](../er-diagram.md)
 - **Frontend**: React + Vite + TypeScript, parallax marketing landing, card-based creator/job discovery (see UI/UX reference: freelancer-card marketplace pattern)
 - **Deployment**: Public cloud (Railway), containerized with Docker

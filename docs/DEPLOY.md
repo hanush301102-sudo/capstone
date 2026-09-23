@@ -1,11 +1,11 @@
 # Deploying CreatorHire to Railway
 
-Three Railway services from this repo (`main` branch): MySQL + backend + frontend.
+Three Railway services from this repo (`main` branch): PostgreSQL + backend + frontend.
 
 ## 1. Create the project
 
 1. Go to https://railway.app → New Project → **Deploy from GitHub repo** → select `hanush301102-sudo/capstone`.
-2. Add a database: **+ New → Database → MySQL**. Note its connection values (or use `${{MySQL.MYSQL_URL}}` references below).
+2. Add a database: **+ New → Database → PostgreSQL**. Note its connection values (or use `${{Postgres.PG*}}` references below).
 
 ## 2. Backend service
 
@@ -15,9 +15,9 @@ Three Railway services from this repo (`main` branch): MySQL + backend + fronten
    | Key | Value |
    |-----|-------|
    | `SPRING_PROFILES_ACTIVE` | `prod` |
-   | `DB_URL` | `jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true` |
-   | `DB_USERNAME` | `${{MySQL.MYSQLUSER}}` |
-   | `DB_PASSWORD` | `${{MySQL.MYSQLPASSWORD}}` |
+   | `DB_URL` | `jdbc:postgresql://${{Postgres.PGHOST}}:${{Postgres.PGPORT}}/${{Postgres.PGDATABASE}}?sslmode=require` |
+   | `DB_USERNAME` | `${{Postgres.PGUSER}}` |
+   | `DB_PASSWORD` | `${{Postgres.PGPASSWORD}}` |
    | `JWT_SECRET` | a long random string (≥ 32 chars) |
    | `FRONTEND_URL` | the frontend public URL (step 3) |
 4. Deploy. Health check: `<backend-url>/api/health` → `{"status":"UP"}`.
@@ -37,5 +37,5 @@ register → post briefed job → discover → apply with samples → ranked rev
 
 ```bash
 docker compose up --build
-# frontend http://localhost:3000 → backend :8080 → MySQL :3306
+# frontend http://localhost:3000 → backend :8080 → PostgreSQL :5432
 ```

@@ -22,7 +22,7 @@ flowchart TB
         XCUT["Cross-cutting\n- Exception Handler\n- Audit Logging"]
     end
 
-    DB[("MySQL Database\n- 15 tables\n- JPA-managed schema")]
+    DB[("PostgreSQL Database\n- 15 tables\n- JPA-managed schema")]
 
     LANDING --> MARKET
     MARKET --> COMPARE
@@ -45,11 +45,11 @@ flowchart TB
     subgraph CLOUD["Cloud Deployment (Railway)"]
         FE["Frontend Service\n- Static build"]
         BE["Backend Service\n- Docker container"]
-        MYSQL[("Managed MySQL")]
+        PG[("Managed PostgreSQL")]
         LB["Public URL / Router"]
     end
     LANDING -.->|"served by"| FE
-    BE --> MYSQL
+    BE --> PG
     LB --> FE
     LB --> BE
 ```

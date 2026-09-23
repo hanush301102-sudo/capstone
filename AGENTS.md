@@ -25,7 +25,7 @@ Explicit user requirement > `docs/mvp.md` > `problem-statement.md` > diagrams > 
 
 ## 4. Stack (locked)
 
-- Backend: Java 21, Spring Boot 3.x, Spring Security + JWT, Spring Data JPA, H2 (dev) / MySQL (prod).
+- Backend: Java 21, Spring Boot 3.x, Spring Security + JWT, Spring Data JPA, H2 (dev) / PostgreSQL (prod).
 - Frontend: React 18 + Vite + TypeScript, React Router, Axios, Tailwind CSS.
 - UI pattern: freelancer-card marketplace (card discovery, comparison view, parallax landing).
 

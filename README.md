@@ -18,7 +18,7 @@ CreatorHire is a style-first, verified, match-scored marketplace that connects c
 
 - **Backend**: Java 21 — Spring Boot (Spring Security + JWT, Spring Data JPA)
 - **Frontend**: React + Vite + TypeScript (parallax landing, card-based discovery)
-- **Database**: MySQL via Spring Data JPA (H2 for local development)
+- **Database**: PostgreSQL via Spring Data JPA (H2 for local development)
 - **Deployment**: Railway (Docker)
 
 ## Documentation
@@ -39,5 +39,5 @@ CreatorHire is a style-first, verified, match-scored marketplace that connects c
 
 ## Deployment
 
-- See [docs/DEPLOY.md](docs/DEPLOY.md) for Railway deployment (MySQL + backend + frontend).
+- See [docs/DEPLOY.md](docs/DEPLOY.md) for Railway deployment (PostgreSQL + backend + frontend).
 - Live URLs: `UNKNOWN` until TASK-031 cloud verification completes.

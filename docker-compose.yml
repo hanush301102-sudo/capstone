@@ -1,21 +1,20 @@
 services:
-  mysql:
-    image: mysql:8.4
+  postgres:
+    image: postgres:16
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: creatorhire
-      MYSQL_USER: creatorhire
-      MYSQL_PASSWORD: creatorhire
+      POSTGRES_DB: creatorhire
+      POSTGRES_USER: creatorhire
+      POSTGRES_PASSWORD: creatorhire
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - postgres-data:/var/lib/postgresql/data
 
   backend:
     build: ./backend
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      DB_URL: jdbc:mysql://mysql:3306/creatorhire?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      DB_URL: jdbc:postgresql://postgres:5432/creatorhire
       DB_USERNAME: creatorhire
       DB_PASSWORD: creatorhire
       JWT_SECRET: change-me-to-a-long-random-secret-for-local-docker-only-0123456789
@@ -23,7 +22,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql
+      - postgres
 
   frontend:
     build: ./frontend
@@ -33,4 +32,4 @@ services:
       - backend
 
 volumes:
-  mysql-data:
+  postgres-data:

@@ -18,7 +18,7 @@ $env:JAVA_HOME = "C:\Program Files\Java\jdk-24"
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - H2 console: http://localhost:8080/h2-console (JDBC URL `jdbc:h2:mem:creatorhire`)
 
-## Run (prod, MySQL)
+## Run (prod, PostgreSQL)
 
 Set `SPRING_PROFILES_ACTIVE=prod` and env vars `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `JWT_SECRET`, `FRONTEND_URL`.
 

@@ -18,7 +18,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 
 | ID | Title | Dependencies | Status |
 |----|-------|--------------|--------|
-| TASK-010 | Project scaffold (Initializr, profiles H2/MySQL, OpenAPI) | TASK-007 | DONE |
+| TASK-010 | Project scaffold (Initializr, profiles H2/PostgreSQL, OpenAPI) | TASK-007 | DONE |
 | TASK-011 | Entities + repositories (15 tables) | TASK-010 | DONE |
 | TASK-012 | Auth (JWT, roles, register/login) | TASK-011 | DONE |
 | TASK-013 | Job + brief + Creator Radar | TASK-012 | DONE |
@@ -42,7 +42,7 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 
 | ID | Title | Dependencies | Status |
 |----|-------|--------------|--------|
-| TASK-030 | Dockerfiles + Railway (MySQL, backend, frontend) | TASK-017, TASK-025 | DONE |
+| TASK-030 | Dockerfiles + Railway (PostgreSQL, backend, frontend) | TASK-017, TASK-025 | DONE |
 | TASK-031 | End-to-end verification on public URL | TASK-030 | TODO |
 
 ## Definition of Done (per task)
