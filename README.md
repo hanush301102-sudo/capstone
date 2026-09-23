@@ -39,5 +39,5 @@ CreatorHire is a style-first, verified, match-scored marketplace that connects c
 
 ## Deployment
 
-- See [docs/DEPLOY.md](docs/DEPLOY.md) for Railway deployment (PostgreSQL + backend + frontend).
-- Live URLs: `UNKNOWN` until TASK-031 cloud verification completes.
+- See [docs/DEPLOY.md](docs/DEPLOY.md) for Vercel (frontend) + Railway (backend + PostgreSQL) deployment.
+- Live URLs: `UNKNOWN` until TASK-031 cloud verification completes with Vercel + Railway.
