@@ -75,7 +75,8 @@ public class SecurityConfig {
                                 "/actuator/health",
                                 "/h2-console/**")
                         .permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login")
+                        .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login",
+                                "/api/auth/verify-otp", "/api/auth/resend-otp")
                         .permitAll()
                         .requestMatchers("/api/admin/**")
                         .hasRole("ADMIN")

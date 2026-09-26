@@ -37,6 +37,29 @@ CreatorHire is a style-first, verified, match-scored marketplace that connects c
 - **Creative Professional** — showcases skills/portfolio and applies for jobs
 - **Admin** — manages users, moderates content, reviews reports
 
+## Email Verification (OTP)
+
+Registration creates an **unverified** account and emails a 6-digit code. Login is blocked until the code is verified.
+
+| Step | Endpoint | Response |
+|------|----------|----------|
+| Register | `POST /api/auth/register` | `201 {message, email}` |
+| Verify | `POST /api/auth/verify-otp` `{email, code}` | `200` + JWT |
+| Resend | `POST /api/auth/resend-otp` `{email}` | `200` (invalidates old code, 30s UI cooldown) |
+| Login (unverified) | `POST /api/auth/login` | `403` "Email not verified…" |
+
+**Policy**: 6-digit `SecureRandom` code · 10-minute expiry (`app.otp.expiry-minutes`) · max 5 attempts (`app.otp.max-attempts`) · SHA-256 hashed storage only · single-use · resend invalidates previous codes · SMTP failure rolls back registration.
+
+**SMTP config** (env vars only — never committed):
+
+| Var | Purpose |
+|-----|---------|
+| `MAIL_HOST` / `MAIL_PORT` | SMTP server (e.g. `smtp.gmail.com` / `587`) |
+| `MAIL_USERNAME` / `MAIL_PASSWORD` | credentials (Gmail app password) |
+| `MAIL_FROM` | sender address |
+
+**Security**: BCrypt passwords · server-side role whitelist (CLIENT/CREATOR only — ADMIN cannot self-register) · no OTP in API responses or logs · SMTP creds from env only.
+
 ## Deployment
 
 - See [docs/DEPLOY.md](docs/DEPLOY.md) for Vercel (frontend) + Railway (backend + PostgreSQL) deployment.

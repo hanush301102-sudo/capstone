@@ -3,7 +3,10 @@ package com.creatorhire.controller;
 import com.creatorhire.dto.AuthResponse;
 import com.creatorhire.dto.CurrentUserResponse;
 import com.creatorhire.dto.LoginRequest;
+import com.creatorhire.dto.OtpResponse;
 import com.creatorhire.dto.RegisterRequest;
+import com.creatorhire.dto.ResendOtpRequest;
+import com.creatorhire.dto.VerifyOtpRequest;
 import com.creatorhire.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,8 +30,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+    public ResponseEntity<OtpResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<AuthResponse> verifyOtp(@Valid @RequestBody VerifyOtpRequest request) {
+        return ResponseEntity.ok(authService.verifyOtp(request.email(), request.code()));
+    }
+
+    @PostMapping("/resend-otp")
+    public ResponseEntity<OtpResponse> resendOtp(@Valid @RequestBody ResendOtpRequest request) {
+        return ResponseEntity.ok(authService.resendOtp(request.email()));
     }
 
     @PostMapping("/login")

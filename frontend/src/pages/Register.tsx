@@ -4,12 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../auth/AuthContext';
 
-function roleHome(roles: string[]): string {
-  if (roles.includes('CLIENT')) return '/client';
-  if (roles.includes('CREATOR')) return '/creator';
-  return '/discover';
-}
-
 function errorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const message = (error.response?.data as { message?: string } | undefined)?.message;
@@ -41,7 +35,7 @@ export function Register() {
     setBusy(true);
     try {
       const data = await register(form);
-      navigate(roleHome(data.roles), { replace: true });
+      navigate('/verify-otp', { replace: true, state: { email: data.email } });
     } catch (err) {
       setError(errorMessage(err));
     } finally {

@@ -26,6 +26,9 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 | TASK-015 | Project + ReliabilityService | TASK-014 | DONE |
 | TASK-016 | Portfolio + verification + notifications + reports + admin | TASK-012 | DONE |
 | TASK-017 | Backend tests (auth, job→apply→hire flow, scoring) | TASK-016 | DONE |
+| TASK-018 | Email OTP verification (register→verify→resend, blocked login) | TASK-012 | DONE |
+| TASK-019 | OTP backend tests (generation, expiry, replay, resend, attempts) | TASK-018 | DONE |
+| TASK-020 | OTP live browser verification (real email, both roles) | TASK-019 | PENDING — requires live SMTP credentials |
 
 ## Phase C — Frontend (React + Vite + TS)
 

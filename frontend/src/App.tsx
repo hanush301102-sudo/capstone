@@ -6,6 +6,7 @@ import { RequireAuth, RequireRole } from './components/ProtectedRoute';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { VerifyOtp } from './pages/VerifyOtp';
 import { Discover } from './pages/Discover';
 import { ClientDashboard } from './pages/client/ClientDashboard';
 import { ClientProjects } from './pages/client/ClientProjects';
@@ -29,6 +30,7 @@ export function App() {
             <Route index element={<Landing />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
+            <Route path="verify-otp" element={<VerifyOtp />} />
             <Route element={<RequireAuth />}>
               <Route path="discover" element={<Discover />} />
               <Route element={<RequireRole role="CLIENT" />}>

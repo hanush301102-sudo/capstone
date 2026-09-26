@@ -5,61 +5,72 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AuthControllerTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+class AuthControllerTest extends OtpTestSupport {
 
     private String register(String email, String role) throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Map.of(
-                                "email", email,
-                                "password", "password123",
-                                "firstName", "Test",
-                                "lastName", "User",
-                                "role", role))))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.email").value(email))
-                .andReturn();
-        return objectMapper.readTree(result.getResponse().getContentAsString()).get("token").asText();
+        return registerAndVerify(email, role);
     }
 
     @Test
-    void registerClientAndLogin() throws Exception {
+    void registerClientVerifyAndLogin() throws Exception {
         String email = "authclient@hire.test";
-        String token = register(email, "CLIENT");
-        assert token != null && !token.isBlank();
+        String code = registerUnverified(email, "CLIENT");
 
-        // Login returns a fresh token
+        // Login is blocked while unverified
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                Map.of("email", email, "password", "password123"))))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("Email not verified. Please verify the code sent to your email"));
+
+        // Verify OTP returns a usable token
+        MvcResult result = mockMvc.perform(post("/api/auth/verify-otp")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                Map.of("email", email, "code", code))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.token").isNotEmpty())
+                .andExpect(jsonPath("$.roles[0]").value("CLIENT"))
+                .andReturn();
+        String token = objectMapper.readTree(result.getResponse().getContentAsString()).get("token").asText();
+
+        // Login works after verification
         mockMvc.perform(post("/api/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 Map.of("email", email, "password", "password123"))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.token").isNotEmpty())
-                .andExpect(jsonPath("$.roles[0]").value("CLIENT"));
+                .andExpect(jsonPath("$.token").isNotEmpty());
 
         // Authenticated /me works with the token
         mockMvc.perform(get("/api/auth/me").header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(email));
+    }
+
+    @Test
+    void registerReturnsVerificationPromptWithoutToken() throws Exception {
+        mockMvc.perform(post("/api/auth/register")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(Map.of(
+                                "email", "pending@hire.test",
+                                "password", "password123",
+                                "firstName", "Test",
+                                "lastName", "User",
+                                "role", "CREATOR"))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.token").doesNotExist());
     }
 
     @Test

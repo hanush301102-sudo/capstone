@@ -57,6 +57,17 @@ public class GlobalExceptionHandler {
         return body(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Map<String, Object>> handleForbidden(
+            ForbiddenException ex, HttpServletRequest request) {
+        return body(HttpStatus.FORBIDDEN, ex.getMessage(), request);
+    }
+
+    @ExceptionHandler(RateLimitException.class)
+    public ResponseEntity<Map<String, Object>> handleRateLimit(
+            RateLimitException ex, HttpServletRequest request) {
+        return body(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage(), request);
+    }
     @ExceptionHandler({BadCredentialsException.class})
     public ResponseEntity<Map<String, Object>> handleBadCredentials(
             BadCredentialsException ex, HttpServletRequest request) {

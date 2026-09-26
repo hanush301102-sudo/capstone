@@ -12,7 +12,6 @@ import com.creatorhire.entity.User;
 import com.creatorhire.repository.RoleRepository;
 import com.creatorhire.repository.SkillRepository;
 import com.creatorhire.repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,20 +21,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class PlatformFlowTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+class PlatformFlowTest extends OtpTestSupport {
     @Autowired
     private SkillRepository skills;
 
@@ -74,6 +65,7 @@ class PlatformFlowTest {
         user.setPassword(passwordEncoder.encode("password123"));
         user.setFirstName("Admin");
         user.setLastName("User");
+        user.setEmailVerified(true);
         user.getRoles().add(admin);
         users.save(user);
         return login(email);
@@ -96,17 +88,7 @@ class PlatformFlowTest {
     }
 
     private String register(String email, String role) throws Exception {
-        MvcResult result = mockMvc.perform(post("/api/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(Map.of(
-                                "email", email,
-                                "password", "password123",
-                                "firstName", "Test",
-                                "lastName", "User",
-                                "role", role))))
-                .andExpect(status().isCreated())
-                .andReturn();
-        return objectMapper.readTree(result.getResponse().getContentAsString()).get("token").asText();
+        return registerAndVerify(email, role);
     }
 
     private long createJob(String token) throws Exception {

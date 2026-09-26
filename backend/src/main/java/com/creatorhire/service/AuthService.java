@@ -5,12 +5,14 @@ import java.util.stream.Collectors;
 import com.creatorhire.dto.AuthResponse;
 import com.creatorhire.dto.CurrentUserResponse;
 import com.creatorhire.dto.LoginRequest;
+import com.creatorhire.dto.OtpResponse;
 import com.creatorhire.dto.RegisterRequest;
 import com.creatorhire.entity.ClientProfile;
 import com.creatorhire.entity.CreatorProfile;
 import com.creatorhire.entity.Role;
 import com.creatorhire.entity.User;
 import com.creatorhire.exception.ConflictException;
+import com.creatorhire.exception.ForbiddenException;
 import com.creatorhire.repository.ClientProfileRepository;
 import com.creatorhire.repository.CreatorProfileRepository;
 import com.creatorhire.repository.RoleRepository;
@@ -37,6 +39,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final OtpService otpService;
 
     public AuthService(
             UserRepository users,
@@ -45,7 +48,8 @@ public class AuthService {
             CreatorProfileRepository creatorProfiles,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            JwtService jwtService) {
+            JwtService jwtService,
+            OtpService otpService) {
         this.users = users;
         this.roles = roles;
         this.clientProfiles = clientProfiles;
@@ -53,10 +57,11 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.otpService = otpService;
     }
 
     @Transactional
-    public AuthResponse register(RegisterRequest request) {
+    public OtpResponse register(RegisterRequest request) {
         String roleName = request.role().toUpperCase();
         if (!SELF_REGISTER_ROLES.contains(roleName)) {
             throw new ConflictException("Role must be CLIENT or CREATOR");
@@ -72,6 +77,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
+        user.setEmailVerified(false);
         user.getRoles().add(role);
         users.save(user);
 
@@ -85,15 +91,34 @@ public class AuthService {
             creatorProfiles.save(profile);
         }
 
-        return new AuthResponse(jwtService.generateToken(user), user.getEmail(), rolesOf(user));
+        otpService.issueOtp(user);
+        return new OtpResponse("Verification code sent to your email", user.getEmail());
     }
 
     @Transactional(readOnly = true)
     public AuthResponse login(LoginRequest request) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
+        User full = users.findByEmail(request.email())
+                .orElseThrow(() -> new ForbiddenException("Invalid email or password"));
+        if (!full.isEmailVerified()) {
+            throw new ForbiddenException("Email not verified. Please verify the code sent to your email");
+        }
         UserDetails user = (UserDetails) auth.getPrincipal();
-        return new AuthResponse(jwtService.generateToken(user), user.getUsername(), rolesOf(user));
+        return new AuthResponse(jwtService.generateToken(user), user.getUsername(), rolesOf(user), true);
+    }
+
+    @Transactional(noRollbackFor = {ConflictException.class,
+            com.creatorhire.exception.RateLimitException.class})
+    public AuthResponse verifyOtp(String email, String code) {
+        User user = otpService.verifyOtp(email, code);
+        return new AuthResponse(jwtService.generateToken(user), user.getEmail(), rolesOf(user), true);
+    }
+
+    @Transactional
+    public OtpResponse resendOtp(String email) {
+        otpService.resendOtp(email);
+        return new OtpResponse("A new verification code was sent to your email", email);
     }
 
     public CurrentUserResponse me(UserDetails user) {

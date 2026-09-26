@@ -55,6 +55,9 @@ public class User implements UserDetails {
     @Column(nullable = false, length = 32)
     private UserStatus status = UserStatus.ACTIVE;
 
+    @Column(nullable = false)
+    private boolean emailVerified = false;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

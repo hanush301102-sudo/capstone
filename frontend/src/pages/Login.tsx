@@ -38,6 +38,10 @@ export function Login() {
       const from = (location.state as { from?: string } | null)?.from;
       navigate(from ?? roleHome(data.roles), { replace: true });
     } catch (err) {
+      if (axios.isAxiosError(err) && err.response?.status === 403 && (err.response?.data as { message?: string } | undefined)?.message?.toLowerCase().includes('verif')) {
+        navigate('/verify-otp', { replace: true, state: { email } });
+        return;
+      }
       setError(errorMessage(err));
     } finally {
       setBusy(false);

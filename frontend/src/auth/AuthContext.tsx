@@ -3,6 +3,11 @@ import type { ReactNode } from 'react';
 import { api, getToken, setToken } from '../api/client';
 import type { AuthResponse, AuthUser } from '../api/types';
 
+export interface OtpResponse {
+  message: string;
+  email: string;
+}
+
 interface AuthContextValue {
   user: AuthUser | null;
   loading: boolean;
@@ -13,7 +18,9 @@ interface AuthContextValue {
     firstName: string;
     lastName: string;
     role: string;
-  }) => Promise<AuthResponse>;
+  }) => Promise<OtpResponse>;
+  verifyOtp: (email: string, code: string) => Promise<AuthResponse>;
+  resendOtp: (email: string) => Promise<OtpResponse>;
   logout: () => void;
   hasRole: (role: string) => boolean;
 }
@@ -48,12 +55,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (input: { email: string; password: string; firstName: string; lastName: string; role: string }) => {
-      const res = await api.post<AuthResponse>('/auth/register', input);
-      applyResponse(res.data);
+      const res = await api.post<OtpResponse>('/auth/register', input);
       return res.data;
     },
-    [applyResponse],
+    [],
   );
+
+  const verifyOtp = useCallback(async (email: string, code: string) => {
+    const res = await api.post<AuthResponse>('/auth/verify-otp', { email, code });
+    applyResponse(res.data);
+    return res.data;
+  }, [applyResponse]);
+
+  const resendOtp = useCallback(async (email: string) => {
+    const res = await api.post<OtpResponse>('/auth/resend-otp', { email });
+    return res.data;
+  }, []);
 
   const logout = useCallback(() => {
     setToken(null);
@@ -63,8 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const hasRole = useCallback((role: string) => user?.roles.includes(role) ?? false, [user]);
 
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, hasRole }),
-    [user, loading, login, register, logout, hasRole],
+    () => ({ user, loading, login, register, verifyOtp, resendOtp, logout, hasRole }),
+    [user, loading, login, register, verifyOtp, resendOtp, logout, hasRole],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

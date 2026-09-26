@@ -37,6 +37,9 @@ springdoc:
     path: /swagger-ui.html
 
 app:
+  otp:
+    expiry-minutes: 10
+    max-attempts: 5
   jwt:
     # Scaffold default only. Override via JWT_SECRET env var (required in prod).
     secret: ${JWT_SECRET:dev-only-secret-key-for-local-development-0123456789}

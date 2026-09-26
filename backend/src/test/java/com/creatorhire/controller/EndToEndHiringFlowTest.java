@@ -15,7 +15,6 @@ import com.creatorhire.repository.CreatorSkillRepository;
 import com.creatorhire.repository.SkillRepository;
 import com.creatorhire.repository.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 /**
@@ -33,14 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-class EndToEndHiringFlowTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+class EndToEndHiringFlowTest extends OtpTestSupport {
     @Autowired
     private SkillRepository skills;
 
@@ -67,13 +58,16 @@ class EndToEndHiringFlowTest {
     }
 
     private String register(String email, String role) throws Exception {
-        return apiPost("/api/auth/register", null, Map.of(
+        apiPost("/api/auth/register", null, Map.of(
                         "email", email,
                         "password", "password123",
                         "firstName", "E2E",
                         "lastName", "User",
                         "role", role),
-                201).get("token").asText();
+                201);
+        String code = lastSentCode();
+        return apiPost("/api/auth/verify-otp", null, Map.of("email", email, "code", code), 200)
+                .get("token").asText();
     }
 
     @Test
