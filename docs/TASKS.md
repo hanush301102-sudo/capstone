@@ -45,8 +45,9 @@ Dependency-aware task plan. Status values: `TODO` | `DOING` | `DONE`.
 
 | ID | Title | Dependencies | Status |
 |----|-------|--------------|--------|
-| TASK-030 | Vercel + Railway deployment (frontend on Vercel, backend+PostgreSQL on Railway) | TASK-017, TASK-025 | DONE |
-| TASK-031 | End-to-end verification on public URL | TASK-030 | TODO |
+| TASK-030 | Deploy readiness: CORS allowlist, VITE_API_BASE_URL client, vercel.json, LOCAL_DEV.md, DEPLOY.md (Vercel + Render + Railway Postgres) | TASK-017, TASK-025 | DONE |
+| TASK-031 | End-to-end verification on public URL | TASK-032 | TODO |
+| TASK-032 | Provision cloud: Railway Postgres (public networking) → Render backend env → Vercel frontend env → fresh Gmail app password for MAIL_* | TASK-030 | TODO — requires user dashboard actions + SMTP credential |
 
 ## Definition of Done (per task)
 
