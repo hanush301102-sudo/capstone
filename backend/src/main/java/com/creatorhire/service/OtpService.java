@@ -62,7 +62,12 @@ public class OtpService {
         otp.setOtpHash(sha256Hex(code));
         otp.setExpiresAt(LocalDateTime.now().plusMinutes(expiryMinutes));
         otps.save(otp);
-        emails.sendOtpEmail(user.getEmail(), code, expiryMinutes);
+        String roleName = user.getRoles().stream()
+                .map(role -> role.getName())
+                .sorted()
+                .findFirst()
+                .orElse(null);
+        emails.sendOtpEmail(user.getEmail(), code, expiryMinutes, roleName);
     }
 
     // Failed attempts must commit even though verification throws: otherwise

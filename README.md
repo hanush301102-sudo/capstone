@@ -48,7 +48,7 @@ Registration creates an **unverified** account and emails a 6-digit code. Login 
 | Resend | `POST /api/auth/resend-otp` `{email}` | `200` (invalidates old code, 30s UI cooldown) |
 | Login (unverified) | `POST /api/auth/login` | `403` "Email not verified…" |
 
-**Policy**: 6-digit `SecureRandom` code · 10-minute expiry (`app.otp.expiry-minutes`) · max 5 attempts (`app.otp.max-attempts`) · SHA-256 hashed storage only · single-use · resend invalidates previous codes · SMTP failure rolls back registration.
+**Policy**: 6-digit `SecureRandom` code · 10-minute expiry (`app.otp.expiry-minutes`) · max 5 attempts (`app.otp.max-attempts`) · SHA-256 hashed storage only · single-use · resend invalidates previous codes · SMTP failure rolls back registration · role-specific email templates (`otp-email-client` for CLIENT, `otp-email-creator` for CREATOR).
 
 **SMTP config** (env vars only — never committed):
 

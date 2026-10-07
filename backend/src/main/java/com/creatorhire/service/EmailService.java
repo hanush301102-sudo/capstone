@@ -1,6 +1,11 @@
 package com.creatorhire.service;
 
 import jakarta.mail.internet.MimeMessage;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.util.StreamUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +21,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
+    private static final String APP_NAME = "CreatorHire";
 
     private final JavaMailSender mailSender;
     private final String from;
@@ -28,12 +34,25 @@ public class EmailService {
     }
 
     public void sendOtpEmail(String to, String code, long expiryMinutes) {
-        String subject = "Your CreatorHire verification code";
-        String plain = "Your CreatorHire verification code is " + code
-                + ". It expires in " + expiryMinutes + " minutes. If you did not request this, ignore this email.";
-        String html = "<p>Your CreatorHire verification code is:</p>"
-                + "<h2 style=\"letter-spacing:4px\">" + code + "</h2>"
-                + "<p>It expires in " + expiryMinutes + " minutes. If you did not request this, ignore this email.</p>";
+        sendOtpEmail(to, code, expiryMinutes, null);
+    }
+
+    /**
+     * Sends the OTP mail using the template set matching the account role:
+     * {@code otp-email-client} for CLIENT accounts, {@code otp-email-creator}
+     * otherwise. A null/unknown role falls back to the generic
+     * {@code otp-email} templates.
+     */
+    public void sendOtpEmail(String to, String code, long expiryMinutes, String roleName) {
+        String base = "templates/otp-email";
+        if (roleName != null && roleName.toUpperCase().contains("CLIENT")) {
+            base = "templates/otp-email-client";
+        } else if (roleName != null) {
+            base = "templates/otp-email-creator";
+        }
+        String subject = "Your " + APP_NAME + " verification code";
+        String plain = render(base + ".txt", code, expiryMinutes);
+        String html = render(base + ".html", code, expiryMinutes);
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -46,6 +65,19 @@ public class EmailService {
         } catch (Exception e) {
             log.error("Failed to send OTP email to {}", mask(to));
             throw new IllegalStateException("Could not send verification email. Please try again later");
+        }
+    }
+
+    private static String render(String location, String code, long expiryMinutes) {
+        try {
+            String template = StreamUtils.copyToString(
+                    new ClassPathResource(location).getInputStream(), StandardCharsets.UTF_8);
+            return template
+                    .replace("{{appName}}", APP_NAME)
+                    .replace("{{code}}", code)
+                    .replace("{{expiryMinutes}}", String.valueOf(expiryMinutes));
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not load email template: " + location, e);
         }
     }
 

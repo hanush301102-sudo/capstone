@@ -42,7 +42,7 @@ public abstract class OtpTestSupport {
 
     protected String lastSentCode() {
         ArgumentCaptor<String> code = ArgumentCaptor.forClass(String.class);
-        verify(emailService, atLeastOnce()).sendOtpEmail(anyString(), code.capture(), anyLong());
+        verify(emailService, atLeastOnce()).sendOtpEmail(anyString(), code.capture(), anyLong(), anyString());
         return code.getValue();
     }
 
