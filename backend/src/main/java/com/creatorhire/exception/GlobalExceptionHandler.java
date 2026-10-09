@@ -85,4 +85,10 @@ public class GlobalExceptionHandler {
             AccessDeniedException ex, HttpServletRequest request) {
         return body(HttpStatus.FORBIDDEN, "Access denied for your role", request);
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalState(
+            IllegalStateException ex, HttpServletRequest request) {
+        return body(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage(), request);
+    }
 }
