@@ -6,6 +6,7 @@ import com.creatorhire.repository.SkillRepository;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Seeds the skill catalog used for job requirements, creator skills, and
@@ -34,12 +35,15 @@ public class SkillCatalogSeeder {
 
     @Bean
     ApplicationRunner seedSkills(SkillRepository skills) {
-        return args -> {
-            for (String[] entry : CATALOG) {
-                if (skills.findByName(entry[0]).isEmpty()) {
-                    skills.save(new Skill(entry[0], SkillCategory.valueOf(entry[1])));
-                }
+        return args -> seedSkillsInternal(skills);
+    }
+
+    @Transactional
+    public void seedSkillsInternal(SkillRepository skills) {
+        for (String[] entry : CATALOG) {
+            if (skills.findByName(entry[0]).isEmpty()) {
+                skills.save(new Skill(entry[0], SkillCategory.valueOf(entry[1])));
             }
-        };
+        }
     }
 }
