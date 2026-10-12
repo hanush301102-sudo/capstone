@@ -63,7 +63,7 @@ public class EmailService {
             mailSender.send(message);
             log.info("OTP email sent to {}", mask(to));
         } catch (Exception e) {
-            log.error("Failed to send OTP email to {}", mask(to));
+            log.error("Failed to send OTP email to {}: {} - {}", mask(to), e.getClass().getSimpleName(), e.getMessage());
             throw new IllegalStateException("Could not send verification email. Please try again later");
         }
     }
