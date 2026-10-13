@@ -34,7 +34,7 @@ public class MailConfig {
         props.put("mail.smtp.connectiontimeout", "10000");
         props.put("mail.smtp.timeout", "10000");
         props.put("mail.smtp.writetimeout", "10000");
-        props.put("mail.debug", "false");
+        props.put("mail.debug", "true");
         return sender;
     }
 }
