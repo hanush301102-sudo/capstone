@@ -1,35 +1,39 @@
 package com.creatorhire.service;
 
-import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
+import org.springframework.web.client.RestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
 
-/**
- * Sends OTP mail via SMTP (env-driven JavaMailSender). Credentials come only
- * from environment variables; nothing secret is ever logged.
- */
 @Service
 public class EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailService.class);
     private static final String APP_NAME = "CreatorHire";
 
-    private final JavaMailSender mailSender;
+    private final RestTemplate restTemplate;
+    private final String apiKey;
+    private final String apiUrl;
     private final String from;
 
     public EmailService(
-            JavaMailSender mailSender,
+            RestTemplate restTemplate,
+            @Value("${MAIL_PASSWORD:}") String apiKey,
+            @Value("${MAIL_API_URL:https://api.brevo.com/v3/smtp/email}") String apiUrl,
             @Value("${MAIL_FROM:creatorhire@example.com}") String from) {
-        this.mailSender = mailSender;
+        this.restTemplate = restTemplate;
+        this.apiKey = apiKey;
+        this.apiUrl = apiUrl;
         this.from = from;
     }
 
@@ -37,12 +41,6 @@ public class EmailService {
         sendOtpEmail(to, code, expiryMinutes, null);
     }
 
-    /**
-     * Sends the OTP mail using the template set matching the account role:
-     * {@code otp-email-client} for CLIENT accounts, {@code otp-email-creator}
-     * otherwise. A null/unknown role falls back to the generic
-     * {@code otp-email} templates.
-     */
     public void sendOtpEmail(String to, String code, long expiryMinutes, String roleName) {
         String base = "templates/otp-email";
         if (roleName != null && roleName.toUpperCase().contains("CLIENT")) {
@@ -54,18 +52,30 @@ public class EmailService {
         String plain = render(base + ".txt", code, expiryMinutes);
         String html = render(base + ".html", code, expiryMinutes);
         try {
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-            helper.setFrom(from);
-            helper.setTo(to);
-            helper.setSubject(subject);
-            helper.setText(plain, html);
-            mailSender.send(message);
+            String payload = buildPayload(to, subject, plain, html);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.set("api-key", apiKey);
+            headers.set("accept", "application/json");
+            restTemplate.postForEntity(apiUrl, new HttpEntity<>(payload, headers), String.class);
             log.info("OTP email sent to {}", mask(to));
         } catch (Exception e) {
             log.error("Failed to send OTP email to {}: {} - {}", mask(to), e.getClass().getSimpleName(), e.getMessage());
             throw new IllegalStateException("Could not send verification email. Please try again later");
         }
+    }
+
+    private String buildPayload(String to, String subject, String plain, String html) {
+        return "{\"sender\":{\"email\":\"" + from + "\"},"
+                + "\"to\":[{\"email\":\"" + to + "\"}],"
+                + "\"subject\":\"" + subject + "\","
+                + "\"textContent\":\"" + escapeJson(plain) + "\","
+                + "\"htmlContent\":\"" + escapeJson(html) + "\"}";
+    }
+
+    private static String escapeJson(String value) {
+        return value.replace("\\", "\\\\").replace("\"", "\\\"")
+                .replace("\n", "\\n").replace("\r", "\\r");
     }
 
     private static String render(String location, String code, long expiryMinutes) {
